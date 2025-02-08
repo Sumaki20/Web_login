@@ -247,213 +247,109 @@ if (isset($_GET['logout']))
                 <!-- End of Topbar -->
 
                 <!-- JS edits button table -->
-                <script>
-                    function cancelEdit(rowId) {
-                        let row = document.getElementById(rowId);
-                        if (!row) return; // ถ้าไม่มีแถวให้หยุดทำงาน
-                    
-                        let textareas = row.querySelectorAll("textarea");
-                        let spans = row.querySelectorAll("span");
-                    
-                        spans.forEach((span, index) => {
-                          let newValue = span.textContent.trim();
-                          
-                          textareas[index].value = newValue;
-                          textareas[index].style.display = "none"; // แสดงข้อความ
-                          span.style.display = "block"; // ซ่อน textarea
-                        });
-                        document.getElementById("edit-btn-"+rowId).style.display = "inline-block";
-                        document.getElementById("delete-btn-"+rowId).style.display = "inline-block";
-                        document.getElementById("save-btn-"+rowId).style.display = "none";
-                        document.getElementById("cancel-btn-"+rowId).style.display = "none";
-                    }
-                    
-                    function editData(rowId) {
-                        let row = document.getElementById(rowId);
-                        if (!row) return; // ถ้าไม่มีแถวให้หยุดทำงาน
-                    
-                        let textareas = row.querySelectorAll("textarea");
-                        let spans = row.querySelectorAll("span");
-                    
-                        spans.forEach((span, index) => {
-                          let newValue = span.textContent.trim();
-                          textareas[index].innerText = newValue; // อัปเดตข้อความใหม่
-                          textareas[index].style.display = "block"; // แสดงข้อความ
-                          span.style.display = "none"; // ซ่อน textarea
-                        });
-                        document.getElementById("edit-btn-"+rowId).style.display = "none";
-                        document.getElementById("delete-btn-"+rowId).style.display = "none";
-                        document.getElementById("save-btn-"+rowId).style.display = "inline-block";
-                        document.getElementById("cancel-btn-"+rowId).style.display = "inline-block";
-                    }
-                  
-                    function saveData(rowId) {
-                        let row = document.getElementById(rowId);
-                        if (!row) return; // ถ้าไม่มีแถวให้หยุดทำงาน
-                    
-                        let textareas = row.querySelectorAll("textarea");
-                        let spans = row.querySelectorAll("span");
-                    
-                        textareas.forEach((textarea, index) => {
-                          let newValue = textarea.value.trim();
-                          spans[index].innerText = newValue; // อัปเดตข้อความใหม่
-                          spans[index].style.display = "block"; // แสดงข้อความ
-                          textarea.style.display = "none"; // ซ่อน textarea
-                        });
-                        // ซ่อนปุ่มบันทึก
-                        row.querySelector("#edit-btn-"+rowId).style.display = "inline-block";
-                        row.querySelector("#delete-btn-"+rowId).style.display = "inline-block";
-                        row.querySelector("#save-btn-"+rowId).style.display = "none";
-                        row.querySelector("#cancel-btn-"+rowId).style.display = "none";
-                    }
-                    
-                    function saveCreateData(rowId) {
-                        let row = document.getElementById(rowId);
-                        if (!row) return; // ถ้าไม่มีแถวให้หยุดทำงาน
-                    
-                        let textareas = row.querySelectorAll("textarea");
-                        let spans = row.querySelectorAll("span");
-                    
-                        textareas.forEach((textarea, index) => {
-                          let newValue = textarea.value.trim();
-                          spans[index].innerText = newValue; // อัปเดตข้อความใหม่
-                          spans[index].style.display = "block"; // แสดงข้อความ
-                          textarea.style.display = "none"; // ซ่อน textarea
-                        });
-                    
-                        // ซ่อนปุ่มบันทึกและแสดงปุ่มแก้ไข
-                        row.querySelector("#edit-btn-"+rowId).style.display = "inline-block";
-                        row.querySelector("#delete-btn-"+rowId).style.display = "inline-block";
-                        row.querySelector("#save-btn-"+rowId).style.display = "none";
-                        row.querySelector("#cancel-btn-"+rowId).style.display = "none";
-                        row.querySelector("#saveCreate-btn-"+rowId).style.display = "none";
-                        document.getElementById("create-btn").style.display = "inline-block";
-                    }
-                  
-                    function myDeleteFunction(rowId) {
-                        let row = document.getElementById(rowId);
-                        if (!row) return; // ถ้าไม่มีแถวให้หยุดทำงาน
-                    
-                        row.remove();
-                    }
-
-                    let indexRowid; //เอาไว้ชี้แถว
-
-                    function myDeleteCon(rowId)
-                    {
-                        indexRowid = rowId;
-                        console.log(indexRowid);
-                    }
-                  
-                    function myCreateFunction() {
-                        console.log("create");
-                        let table = document.getElementById("dataTable");
-                        let index = table.rows.length; // คำนวณ index ใหม่
-                        let rowId = `row-${index}`;
-                    
-                        let row = table.insertRow(index-1);
-                        row.id = rowId;
-                    
-                        row.innerHTML = `
-                            <td>
-                                <span id="e1-${index}" style="display: none;"></span>
-                                <textarea id="edit-input${index}" style="display: block;"></textarea>
-                            </td>
-                            <td>
-                                <span id="e2-${index}" style="display: none;"></span>
-                                <textarea id="edit-input${index}" style="display: block;"></textarea>
-                            </td>
-                            <td>
-                                <span id="e3-${index}" style="display: none;"></span>
-                                <textarea id="edit-input${index}" style="display: block;"></textarea>
-                            </td>
-                            <td>
-                            </td>
-                            <td>
-                                <button onclick="editData('${rowId}')" id="edit-btn-${rowId}" style="display: none;">แก้ไข</button>
-                                <button onclick="myDeleteFunction('${rowId}')" id="delete-btn-${rowId}" style="display: none;">delete</button>
-                                <button onclick="saveCreateData('${rowId}')" id="saveCreate-btn-${rowId}" style="display: inline-block;">บันทึก</button>
-                                <button onclick="saveData('${rowId}')" id="save-btn-${rowId}" style="display: none;">บันทึก</button>
-                                <button onclick="cancelEdit('${rowId}')" id="cancel-btn-${rowId}" style="display: inline-block;">ยกเลิก</button>
-                            </td>
-                        `;
-                        document.getElementById("create-btn").style.display = "none";
-                    }
-                </script>
-                    <style>
-                        textarea {
-                          width: 100%;
-                          min-height: 40px;
-                          resize: none; /* ปิดการปรับขนาด */
-                          overflow: hidden; /* ซ่อน Scrollbar */
-                          border: 1px solid #ccc;
-                          padding: 5px;
-                          font-size: 16px;
-                        }
-                    </style>
+                <style>
+                    textarea {
+                    width: 100%;
+                    min-height: 40px;
+                    resize: none; /* ปิดการปรับขนาด */
+                    overflow: hidden; /* ซ่อน Scrollbar */
+                    border: 1px solid #ccc;
+                    padding: 5px;
+                    font-size: 16px;
+                }
+                </style>
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">ToDoList</h1>
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        
-                    </div>
+                    
                         
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Task ToDoList</h6>
+                            <h3 class="m-0 font-weight-bold text-primary">Task ToDoList</h3>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0" style="table-layout: fixed;">
                                     <thead>
                                         <tr>
-                                            <th style="width: 50%;">Task</th>
-                                            <th style="width: 15%;">Status</th>
-                                            <th style="width: 10%;">Deadline</th>
-                                            <th style="width: 10%;">Remaining</th>
-                                            <th style="width: 15%;">Edit</th>
+                                            <th style="width: 10%;">Title</th>
+                                            <th style="width: 40%;">Details</th>
+                                            <th style="width: 10%;">Status</th>
+                                            <th style="width: 10%;">Due Date</th>
+                                            <th style="width: 10%;">Completion Date</th>
+                                            <th style="width: 10%;">Edit</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
-                                        <tr>
-                                            <td colspan="4" style="border-right: 0;">
-                                            </td>
-                                            <td >
-                                                <a href="#" onclick="myCreateFunction()" id="create-btn" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-                                                    <i class="fas fa-download fa-sm text-white-50"></i> New Task
-                                                </a>
+                                        <tr id="create-btn">
+                                            <td colspan="6" style="height: 20px;" class="text-center">
+                                                <button onclick="myCreateFunction()" class="btn btn-primary">
+                                                    <i class="fas fa-download fa-sm text-white-50 inline-block"></i> New Task
+                                                </button>
                                             </td>
                                         </tr>
                                     </tfoot>
-                                    <tbody>
+                                    <tbody id="mainbody">
                                         <tr id="row-1">
                                             <td >
-                                                <span id="e1-${row-1}">ตัวอsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssย่างข้อมูล</span>
-                                                <textarea id="edit-input${row-1}" style="display: none;" oninput="this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px';" placeholder="พิมพ์ข้อความที่นี่...">ตัวอย่างข้อมูล</textarea>
+                                                <span id="e1-row-1">ตัวอsssssssssวอsssssssssวอsssssssssวอsssssssssวอsssssssssวอsssssssssวอsssssssssวอssssssssssย่างข้อมูล</span>
+                                                <textarea id="edit-input1-row-1" style="display: none; " >ตัวอย่างข้อมูล</textarea>
                                             </td>
                                             <td >
-                                                <span id="e2-${row-1}">ตัวอssssssssssssssssssssssssssssย่ssssssssssssssssssssssssssssย่ย่างข้อมูล</span>
-                                                <textarea id="edit-input${row-1}" style="display: none;" oninput="this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px';" placeholder="พิมพ์ข้อความที่นี่...">ตัวอย่างข้อมูล</textarea>
+                                                <span id="e2-row-1">ตัวอsssวอsssssssssวอsssssssssวอsssssssssวอsssssssssวอssssssssssssssย่ย่างข้อมูล</span>
+                                                <textarea id="edit-input2-row-1" style="display: none;">ตัวอย่างข้อมูล</textarea>
                                             </td>
-                                            <td >
+                                            <td style="text-align: center; vertical-align: middle;">
+                                                <span id="e3-row-1">asdasdasdas</span>
+                                                <div class="dropdown" >
+                                                    <button class="btn btn-info" type="button" id="edit-input3-row-1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 100%; display:none;">
+                                                        Select Status
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li><a class="dropdown-item"  onclick="selectOption('Pending','row-1')">Pending</a></li>
+                                                        <li><a class="dropdown-item"  onclick="selectOption('Hold','row-1')">Hold</a></li>
+                                                        <li><a class="dropdown-item"  onclick="selectOption('Complete','row-1')">Complete</a></li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+
+                                            <td style="text-align: center; vertical-align: middle;">
+                                                <p id="e4-row-1" style="display: block; ">2</p>
+                                                <input type="date" id="edit-input4-row-1" style="display: none;"></input>
+                                            </td>
+                                            <td style="text-align: center; vertical-align: middle;">
+                                                <p id="e5-row-1" style="display: block; ">2</p>
+                                                <input type="date" id="edit-input5-row-1" style="display: none;"></input>
+                                            </td>
+                                            <td style="text-align: center; vertical-align: middle;">
                                                 
-                                                <span id="e3-${row-1}">ตัวอย่างข้อมูล</span>
-                                                <textarea id="edit-input${row-1}" style="display: none; "oninput="this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px';" placeholder="พิมพ์ข้อความที่นี่...">ตัวอย่างข้อมูล</textarea>
-                                            </td>
-                                            <td >
-                                                3
-                                            </td>
-                                            <td>
-                                                <button onclick="editData('row-1')" id="edit-btn-row-1" style="display: inline-block;" >แก้ไข</button>
-                                                <button onclick="myDeleteCon('row-1')"id="delete-btn-row-1" class="btn btn-danger"  data-toggle="modal" data-target="#deleteModal">Delete</button>
-                                                <button onclick="saveData('row-1')" id="save-btn-row-1" style="display: none;">บันทึก</button>
-                                                <button onclick="cancelEdit('row-1')" id="cancel-btn-row-1" style="display: none;">ยกเลิก</button>
+                                                <button onclick="editData('row-1')" id="edit-btn-row-1" class="btn btn-warning" style="display: inline-flex; margin: 2px;">
+                                                    <div class="icon text-white-50">
+                                                        <i class="fas fa-tools"></i>
+                                                    </div>
+                                                </button>
+                                                <button onclick="myDeleteCon('row-1')" id="delete-btn-row-1" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" style="display: inline-flex; margin: 2px;">
+                                                    <div class="icon text-white-50">
+                                                        <i class="fas fa-trash"></i>
+                                                    </div>
+                                                </button>
+                                                <button onclick="saveData('row-1')" id="save-btn-row-1" class="btn btn-success" style="display: none; margin: auto;">
+                                                    <div class="icon text-white-50">
+                                                        <i class="fas fa-save" ></i>
+                                                    </div>
+                                                </button>
+                                                <button onclick="cancelEdit('row-1')" id="cancel-btn-row-1" class="btn btn-warning" style="display: none; margin: auto;">
+                                                    <div class="icon text-white-50">
+                                                        <i class="fas fa-times" ></i>
+                                                    </div>
+                                                </button>
+                                                
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
+                                
                             </div>
                         </div>
                     </div>
@@ -542,6 +438,7 @@ if (isset($_GET['logout']))
 
     <!-- Page level custom scripts -->
     <script src="js/demo/datatables-demo.js"></script>
+    <script src="js/controlTodolist/todolistJS.js"></script>
 
 </body>
 
