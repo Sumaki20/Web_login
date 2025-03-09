@@ -1,6 +1,6 @@
 .scroll-box {
     width: 100%;         /* กำหนดความกว้าง */
-    height: 200px;        /* กำหนดความสูง */
+    height: 250px;        /* กำหนดความสูง */
     border: 1px solid #ccc; /* ขอบกล่อง */
     padding: 10px;       /* ระยะขอบภายใน */
     overflow-y: scroll;  /* เพิ่ม scrollbar ในแนวตั้ง */

@@ -5,9 +5,9 @@ $PASSWORD='';
 $DATABASE='signupform';
 
 $con=mysqli_connect($HOSTNAME,$USERNAME,$PASSWORD,$DATABASE);
-if ($con) {
-    //echo "Connected successfully";
+if (!$con) {
+    die("Connection failed: " . mysqli_connect_error());
   }
-  else{
-      die(mysqli_error($con));
-  }
+  $con->set_charset("utf8mb4");
+
+  

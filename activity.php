@@ -1,4 +1,5 @@
 <?php
+require("connect.php");
 session_start();
 
 if (!isset($_SESSION['username']))
@@ -13,6 +14,9 @@ if (isset($_GET['logout']))
     unset($_SESSION['username']);
     header('location: login.php');
 }
+$queryB = "SELECT * FROM user_task WHERE user_id = '".$_SESSION['user']."' AND status IN ('Hold', 'Pending') AND deadline IS NOT NULL ORDER BY deadline ASC";
+$resultB = $con->query($queryB);
+$foundRow = $resultB->num_rows;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,6 +32,7 @@ if (isset($_GET['logout']))
     <title>Personal Data | activitylog</title>
 
     <!-- Custom fonts for this template-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
@@ -48,9 +53,9 @@ if (isset($_GET['logout']))
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
                 <div class="sidebar-brand-icon">
-                    <i class="fas fa-home"></i>
+                    <i class="fa fa-book"></i>
                 </div>
                 <div class="sidebar-brand-text mx-3">Personal Data</div>
             </a>
@@ -61,7 +66,7 @@ if (isset($_GET['logout']))
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
                 <a class="nav-link" href="index.php">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <i class="fas fa-chart-line"></i>
                     <span>Dashboard</span></a>
             </li>
 
@@ -70,83 +75,31 @@ if (isset($_GET['logout']))
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                Interface
+                My Functions
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                     aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fas fa-fw fa-cog"></i>
-                    <span>Components</span>
+                    <i class="fas fa-search"></i>
+                    <span>Management</span>
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Mini function:</h6>
-                        <a class="collapse-item" href="buttons.html">Your list</a>
-                        <a class="collapse-item" href="cards.html">Cards</a>
+                        <a class="collapse-item" href="todolist.php">Task ToDoList</a>
                     </div>
                 </div>
-            </li>
-
-            <!-- Nav Item - Utilities Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-                    aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fas fa-fw fa-wrench"></i>
-                    <span>Utilities</span>
-                </a>
-                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Utilities:</h6>
-                        <a class="collapse-item" href="utilities-color.html">Colors</a>
-                        <a class="collapse-item" href="utilities-border.html">Borders</a>
-                        <a class="collapse-item" href="utilities-animation.html">Animations</a>
-                        <a class="collapse-item" href="utilities-other.html">Other</a>
-                    </div>
-                </div>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Addons
-            </div>
-
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                    aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Pages</span>
-                </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Login Screens:</h6>
-                        <a class="collapse-item" href="login.html">Login</a>
-                        <a class="collapse-item" href="register.html">Register</a>
-                        <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
-                        <div class="collapse-divider"></div>
-                        <h6 class="collapse-header">Other Pages:</h6>
-                        <a class="collapse-item" href="404.html">404 Page</a>
-                        <a class="collapse-item" href="blank.html">Blank Page</a>
-                    </div>
-                </div>
-            </li>
-
-
-            
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
 
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
+            <!-- Nav Item - Pages Collapse Menu -->
+                <!-- Sidebar Toggler (Sidebar) -->
+                <div class="text-center d-block">
+                    <button class="rounded-circle border-0" id="sidebarToggle"></button>
+                </div>
 
 
         </ul>
@@ -208,7 +161,69 @@ if (isset($_GET['logout']))
                         </li>
 
                         <!-- Nav Item - Alerts -->
-                        
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-bell fa-fw"></i>
+                                <!-- Counter - Alerts -->
+                                <span class="badge badge-danger badge-counter">
+                                    <?php
+                                    if($foundRow > 3)
+                                    {
+                                        echo "3+";
+                                    }else
+                                    {
+                                        echo $foundRow;
+                                    }
+                                    ?></span>
+                            </a>
+                            <!-- Dropdown - Alerts -->
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="alertsDropdown">
+                                <h6 class="dropdown-header">
+                                    Alerts Center
+                                </h6>
+                                <?php
+                                for($i = 1; $i <= $foundRow;$i++){
+                                    if($i > 3) break;
+                                    $rowB = $resultB->fetch_assoc();
+                                    
+                                    $currentDate = date("Y-m-d");
+                                    $origin = date_create(date('Y-m-d', strtotime($rowB['deadline'])));
+                                    $currenDay = date_create(date('Y-m-d'));
+                                    $interval = date_diff($origin, $currenDay);    
+                                ?>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle <?php 
+                                            if ($interval->invert == 1) {
+                                                echo "bg-warning";
+                                                
+                                            } else {
+                                                echo "bg-danger";
+                                            } 
+                                            ?>">
+                                            <i class="fa-solid fa-file-lines text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">
+                                            <?php
+                                            if ($interval->invert == 1) {
+                                                echo "ถึงกำหนดในอีก " . $interval->days . " วัน";
+                                                
+                                            } else {
+                                                echo "เกินกำหนดมา " . $interval->days . " วัน";
+                                            }
+                                            ?>
+                                        </div>
+                                        <span class="font-weight-bold"><?php echo $rowB['title']; ?></span>
+                                    </div>
+                                </a>
+                                <?php } ?>
+                                <!-- <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a> -->
+                            </div>
+                        </li>
 
                         <!-- Nav Item - Messages -->
                         
@@ -265,7 +280,7 @@ if (isset($_GET['logout']))
                                         $id = mysqli_real_escape_string($con, $_SESSION['user']); // ป้องกัน SQL Injection
                                         
                                         // คำสั่ง SQL
-                                        $sql = "SELECT * FROM user_activity WHERE user_id = '$id'";
+                                        $sql = "SELECT * FROM user_activity WHERE user_id = '$id' ORDER BY timestamp DESC";
                                         
                                         // รันคำสั่ง SQL
                                         $result = mysqli_query($con, $sql);
@@ -280,7 +295,7 @@ if (isset($_GET['logout']))
                                                 </b></h6>
                                                 <p class="page-header">
                                                     <?php 
-                                                    echo 'Your login date in &nbsp;' . $row['timestamp']; 
+                                                    echo 'Your login date in &nbsp;' . date("d-m-Y H:i:s", strtotime($row['timestamp']));
                                                     ?>
                                                 </p>
                                                 <hr />
@@ -310,7 +325,7 @@ if (isset($_GET['logout']))
         <footer class="sticky-footer bg-white">
             <div class="container my-auto">
                 <div class="copyright text-center my-auto">
-                    <span>Copyright &copy; Your Website 2020</span>
+                    
                 </div>
             </div>
         </footer>
