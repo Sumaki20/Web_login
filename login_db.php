@@ -10,10 +10,13 @@ if(isset($_POST['login_user']))
     if(empty($username))
     {
         array_push($errors, "Username is required");
+        header("location: index.php");
     }
     if(empty($password))
     {
         array_push($errors,"Passwprd is required");
+        var_dump($errors);
+        header("location: index.php");
     }
 
     if (count($errors) == 0)

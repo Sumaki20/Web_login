@@ -291,12 +291,12 @@ $foundRow = $resultB->num_rows;
                                             </div>
                                             <div class="row no-gutters align-items-center">
                                                 <div class="col-auto">
-                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><?php echo number_format((($row['Com']/$row['total']))*100,2) ?>%</div>
+                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><?php echo $foundRow != 0 ? number_format((($row['Com']/$row['total']))*100,2) : 0 ?>%</div>
                                                 </div>
                                                 <div class="col">
                                                     <div class="progress progress-sm mr-2">
                                                         <div class="progress-bar bg-info" role="progressbar"
-                                                            style="width: <?php echo number_format((($row['Com']/$row['total']))*100,2) ?>%" aria-valuenow="50" aria-valuemin="0"
+                                                            style="width: <?php echo $foundRow != 0 ? number_format((($row['Com']/$row['total']))*100,2) : 0 ?>%" aria-valuenow="50" aria-valuemin="0"
                                                             aria-valuemax="100"></div>
                                                     </div>
                                                 </div>
@@ -415,21 +415,20 @@ $foundRow = $resultB->num_rows;
                                     <h6 class="m-0 font-weight-bold text-primary">Projects Due soon.</h6>
                                 </div>
                                 <div class="card-body">
-                                    <!-- <h4 class="small font-weight-bold">Server Migration <span
-                                            class="float-right">20%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 20%"
-                                            aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div> -->
                                     <?php 
+                                    if($foundRow == 0){
+                                        echo "No projects due soon.";
+                                    }
                                     $resultB->data_seek(0);
+                                    
                                     for($i = 1; $i <= $foundRow;$i++){
                                         if($i > 4) break;
                                         
                                         $rowB = $resultB->fetch_assoc();
+                                        if($foundRow != 0){
                                     ?>
                                     <div style="height: 25%; margin-top: 10px;">
-                                        <h6 ><?php echo substr($rowB['title'], 0, 50); ?> <span
+                                        <h6 ><?php echo substr($rowB['title'], 0, 50) ?> <span
                                         class="float-right">
                                         <?php 
                                             $currentDate = date("Y-m-d");
@@ -442,9 +441,12 @@ $foundRow = $resultB->num_rows;
                                             } else {
                                                 echo "เกินกำหนด " . $interval->days . " วัน";
                                             } 
+                                        }
                                         ?></span></h6>
                                     </div>
-                                    <?php } ?>
+                                    <?php 
+                                        }
+                                    ?>
                                 </div>
                             </div>
                     </div>
@@ -551,3 +553,7 @@ $foundRow = $resultB->num_rows;
 </body>
 
 </html>
+<?php
+// Close the database connection
+// $con->close();
+?>

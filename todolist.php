@@ -408,7 +408,7 @@ $foundRow = $resultB->num_rows;
                         
                         if(inputStatus.textContent.trim() == "Complete"){
                             isComplete = 1;
-                            showCom.textContent = <?php echo "'".date("d-m-Y")."'" ?>;
+                            showCom.textContent = <?php echo "'".date("d/m/Y")."'" ?>;
                         }else
                         {
                             isComplete = 0;
@@ -560,6 +560,7 @@ $foundRow = $resultB->num_rows;
                             .catch(error => console.error('Error:', error));
                             // location.reload();
                         row.remove();
+                        location.reload();
                     }
 
                     let indexRowid; //เอาไว้ชี้แถว

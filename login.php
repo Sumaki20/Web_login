@@ -38,7 +38,7 @@
                                 <h1 class="h4 text-gray-900 mb-4">Welcome</h1>
                             </div>
                             <form class="user" action="login_db.php" method="post">
-                            <?php if (isset($_SESSION['error'])) : ?>
+                                <?php if (isset($_SESSION['error'])) : ?>
                                 <div>
                                     <h3>
                                         <?php
@@ -47,21 +47,22 @@
                                         ?>
                                     </h3>
                                 </div>
-                            <?php endif ?>
+                                <?php endif ?>
                                 <div class="form-group">
                                     <input type="text" class="form-control form-control-user" name="username" aria-describedby="emailHelp"
-                                        placeholder="Enter Username">
+                                        placeholder="Enter Username" required>
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" class="form-control form-control-user" name="password" placeholder="Password">
+                                    <input type="password" class="form-control form-control-user" name="password" placeholder="Password" required>
                                 </div>
-                                <div class="form-group">
+                                <!-- <div class="form-group">
                                     <div class="custom-control custom-checkbox small">
                                         <input type="checkbox" class="custom-control-input" id="customCheck">
                                         <label class="custom-control-label" for="customCheck">Remember
                                             Me</label>
                                     </div>
-                                </div>
+                                </div> -->
+                                <p>User : admin / Pass : admin</p>
                                 <div class="input-group">
                                     <button type="submit" name="login_user" class="btn btn-primary btn-user btn-block">Login
                                     </button>
@@ -71,9 +72,11 @@
                             <!-- <div class="text-center">
                                 <a class="small" href="forgot-password.html">Forgot Password?</a>
                             </div> -->
+                            <!-- My HoldProgram -->
                             <div class="text-center">
                                 <a class="small" href="register.php">Create an Account!</a>
                             </div>
+                            
                         </div>
                     </div>
                 </div>
